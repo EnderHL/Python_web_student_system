@@ -5,9 +5,9 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:8000/api/v1
+  - url: http://localhost:8000
     description: 本地开发环境
-  - url: https://api.example.com/v1
+  - url: https://api.example.com
     description: 生产环境
 
 tags:
@@ -135,4 +135,6 @@ components:
         id: { type: integer, example: 1 }
         name: { type: string, example: 张三 }
         age: { type: integer, example: 20 }
+        gender: { type: string, example: 男 }
         major: { type: string, example: 计算机科学 }
+        email: { type: string, example: zhangsan@example.com }
