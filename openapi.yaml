@@ -1,0 +1,138 @@
+openapi: 3.0.0
+info:
+  title: 学生管理系统 API
+  description: 提供用户认证、学生、教师、课程等模块接口
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8000/api/v1
+    description: 本地开发环境
+  - url: https://api.example.com/v1
+    description: 生产环境
+
+tags:
+  - name: Auth
+    description: 用户认证模块
+  - name: Students
+    description: 学生管理模块
+  - name: Teachers
+    description: 教师管理模块
+  - name: Courses
+    description: 课程管理模块
+
+paths:
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: 用户登录
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: admin
+                password:
+                  type: string
+                  example: "123456"
+      responses:
+        '200':
+          description: 登录成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    example: xxxxx.yyyyy.zzzzz
+                  user:
+                    type: object
+                    properties:
+                      id: { type: integer, example: 1 }
+                      username: { type: string, example: admin }
+
+  /students:
+    get:
+      tags: [Students]
+      summary: 获取学生列表
+      responses:
+        '200':
+          description: 成功返回学生数据
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+
+    post:
+      tags: [Students]
+      summary: 新增学生
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '201':
+          description: 学生创建成功
+
+  /students/{id}:
+    get:
+      tags: [Students]
+      summary: 获取单个学生信息
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: 学生详情
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+    put:
+      tags: [Students]
+      summary: 更新学生信息
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
+      responses:
+        '200':
+          description: 更新成功
+    delete:
+      tags: [Students]
+      summary: 删除学生
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '204':
+          description: 删除成功
+
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        id: { type: integer, example: 1 }
+        name: { type: string, example: 张三 }
+        age: { type: integer, example: 20 }
+        major: { type: string, example: 计算机科学 }
