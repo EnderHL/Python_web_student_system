@@ -4,17 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6db1530d-9aee-4583-a19c-7b8cc9b985f8" name="更改" comment="build">
+    <list default="true" id="6db1530d-9aee-4583-a19c-7b8cc9b985f8" name="更改" comment="完成学生管理模块,新建教师管理模块">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/579863e9-4868-43bc-b000-68fbe1712cdd.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/579863e9-4868-43bc-b000-68fbe1712cdd.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/5e9bdd28-e8be-4aaa-bc11-265a2fe9990e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/5e9bdd28-e8be-4aaa-bc11-265a2fe9990e.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/openapi.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/openapi.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/python_web_student_system/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/python_web_student_system/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/student/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/python_web_student_system/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/python_web_student_system/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/student/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/student/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/student/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/student/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/student/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/student/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/student/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/student/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/teacher/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_api.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -57,6 +58,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
+    "ts.external.directory.path": "D:\\Study\\JetBrains\\PyCharm\\PyCharm 2024.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -114,7 +116,9 @@
       <option name="presentableId" value="Default" />
       <updated>1757488955999</updated>
       <workItem from="1757488957457" duration="13958000" />
-      <workItem from="1757557931840" duration="9860000" />
+      <workItem from="1757557931840" duration="14165000" />
+      <workItem from="1757900790457" duration="5761000" />
+      <workItem from="1758163007972" duration="9535000" />
     </task>
     <task id="LOCAL-00001" summary="build">
       <option name="closed" value="true" />
@@ -124,7 +128,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757560916231</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="完成学生管理模块,新建教师管理模块">
+      <option name="closed" value="true" />
+      <created>1757582605451</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1757582605451</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -143,6 +155,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="build" />
-    <option name="LAST_COMMIT_MESSAGE" value="build" />
+    <MESSAGE value="完成学生管理模块,新建教师管理模块" />
+    <option name="LAST_COMMIT_MESSAGE" value="完成学生管理模块,新建教师管理模块" />
   </component>
 </project>

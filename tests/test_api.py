@@ -1,5 +1,7 @@
-import requests
 import json
+import json
+import requests
+
 
 # 测试基础URL
 base_url = 'http://localhost:8000/api/students/'

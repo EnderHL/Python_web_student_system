@@ -14,7 +14,7 @@ class StudentSerializer(serializers.ModelSerializer):
         # 指定使用的模型类
         model = Student
         # 指定序列化的字段列表
-        fields = ['id', 'name', 'age', 'gender', 'major', 'email']
+        fields = ['id', 'name', 'age', 'gender', 'major', 'email', 'class_name', 'student_id', 'college', 'phone']
         # 指定只读字段（不会被反序列化更新）
         read_only_fields = ['id']
 
