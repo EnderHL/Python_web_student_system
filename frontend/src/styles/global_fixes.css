@@ -1,0 +1,130 @@
+/* 全局样式修复文件 - 解决前端优化需求 */
+
+/* 1. 最高优先级：统一所有表格文字颜色为黑色 */
+/* 覆盖所有表格样式，确保文字颜色为黑色 */
+table {
+  color: #000 !important;
+}
+
+table th,
+table td {
+  color: #000 !important;
+  background-color: white !important;
+}
+
+/* 针对各模块特定表格的额外覆盖 */
+.schedule-table th,
+.schedule-table td,
+.student-table th,
+.student-table td,
+.teacher-table th,
+.teacher-table td,
+.course-list th,
+.course-list td {
+  color: #000 !important;
+}
+
+/* 2. 中优先级：统一页面背景色为纯白色 */
+/* 重置根元素背景色 */
+:root {
+  background-color: #ffffff !important;
+  color: #213547 !important;
+}
+
+/* 覆盖所有容器背景色 */
+body {
+  background-color: #ffffff !important;
+  margin: 0;
+  display: block;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+/* 重置各模块容器背景色 */
+.schedule-container,
+.classroom-container,
+.home-container,
+.login-container {
+  background-color: #ffffff !important;
+}
+
+/* 重置主内容区域背景色 */
+.main-content {
+  background-color: #ffffff !important;
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* 3. 中优先级：优化container区域尺寸 */
+/* 确保容器占据最大可用空间 */
+#app {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 确保侧边栏和主内容区域正确布局 */
+.main-layout {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 针对不同模块的容器优化 */
+.schedule-list,
+.student-list,
+.teacher-list,
+.classroom-list,
+.course-list {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* 确保卡片组件也能充分利用空间 */
+.card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 修复按钮颜色以确保在白色背景下可见 */
+button {
+  background-color: #f9f9f9 !important;
+  color: #213547 !important;
+}
+
+button:hover {
+  background-color: #e9e9e9 !important;
+}
+
+/* 确保链接颜色在白色背景下可见 */
+a {
+  color: #646cff !important;
+}
+
+a:hover {
+  color: #535bf2 !important;
+}
+
+/* 响应式设计调整 */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+  
+  /* 小屏幕上可能需要调整侧边栏行为 */
+  .sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+  }
+  
+  .main-content {
+    margin-left: 0;
+  }
+}
