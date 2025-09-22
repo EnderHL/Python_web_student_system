@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'course',
 ]
 
 # 配置自定义用户模型
@@ -81,6 +82,8 @@ TEMPLATES = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vite 默认端口
     "http://127.0.0.1:5173",
+    "http://localhost:5174",  # Vite 备用端口
+    "http://127.0.0.1:5174",
 ]
 # 允许所有源（开发阶段使用）
 CORS_ALLOW_ALL_ORIGINS = True

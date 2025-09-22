@@ -25,6 +25,7 @@ urlpatterns = [
     path("api/", include("student.urls")),
     path("api/", include("teacher.urls")),
     path("api/auth/", include("user_auth.urls")),  # 认证相关API路由
+    path("api/", include("course.urls")),
 ]
 
 # 开发环境下提供媒体文件访问

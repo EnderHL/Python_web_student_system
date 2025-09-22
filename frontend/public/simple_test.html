@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简单测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+        }
+        .success {
+            color: #4CAF50;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <h1>简单测试页面</h1>
+    <p class="success">🎉 前端服务器正常运行！</p>
+    <p>这是一个不依赖Vue框架的静态HTML文件。</p>
+    <p>如果您看到此页面，说明前端服务器能够正常提供静态文件。</p>
+    <p>当前时间: <span id="current-time"></span></p>
+    
+    <script>
+        // 显示当前时间，验证JavaScript是否正常运行
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleString();
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+    </script>
+</body>
+</html>

@@ -4,18 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6db1530d-9aee-4583-a19c-7b8cc9b985f8" name="更改" comment="完成学生管理模块,新建教师管理模块">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/5e9bdd28-e8be-4aaa-bc11-265a2fe9990e.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/5e9bdd28-e8be-4aaa-bc11-265a2fe9990e.xml" afterDir="false" />
+    <list default="true" id="6db1530d-9aee-4583-a19c-7b8cc9b985f8" name="更改" comment="登录，教师，学生模块，前端完善">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/development_progress.md" beforeDir="false" afterPath="$PROJECT_DIR$/development_progress.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/router/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Home.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/Register.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Register.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/Student.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Student.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/views/Teacher.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Teacher.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python_web_student_system/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/python_web_student_system/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python_web_student_system/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/python_web_student_system/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/student/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/student/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/student/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/student/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/teacher/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/teacher/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_api.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,6 +34,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="aa302ffb-40f0-4708-ac16-ad7a8b46d9f8" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -118,7 +121,7 @@
       <workItem from="1757488957457" duration="13958000" />
       <workItem from="1757557931840" duration="14165000" />
       <workItem from="1757900790457" duration="5761000" />
-      <workItem from="1758163007972" duration="9535000" />
+      <workItem from="1758163007972" duration="12263000" />
     </task>
     <task id="LOCAL-00001" summary="build">
       <option name="closed" value="true" />
@@ -136,7 +139,15 @@
       <option name="project" value="LOCAL" />
       <updated>1757582605451</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="登录，教师，学生模块，前端完善">
+      <option name="closed" value="true" />
+      <created>1758423207103</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1758423207103</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -156,6 +167,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="build" />
     <MESSAGE value="完成学生管理模块,新建教师管理模块" />
-    <option name="LAST_COMMIT_MESSAGE" value="完成学生管理模块,新建教师管理模块" />
+    <MESSAGE value="登录，教师，学生模块，前端完善" />
+    <option name="LAST_COMMIT_MESSAGE" value="登录，教师，学生模块，前端完善" />
   </component>
 </project>

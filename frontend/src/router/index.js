@@ -20,7 +20,7 @@ const routes = [
     name: 'Register',
     component: () => import('../views/Register.vue')
   },
-  {    
+  {
     path: '/teacher',
     name: 'Teacher',
     component: () => import('../views/Teacher.vue'),
@@ -35,6 +35,33 @@ const routes = [
     component: () => import('../views/Student.vue'),
     meta: {
       requiresAuth: true
+    }
+  },
+  {
+    path: '/course',
+    name: 'Course',
+    component: () => import('../views/Course.vue'),
+    meta: {
+      requiresAuth: true,
+      adminOnly: true
+    }
+  },
+  {
+    path: '/schedule',
+    name: 'Schedule',
+    component: () => import('../views/Schedule.vue'),
+    meta: {
+      requiresAuth: true,
+      adminOnly: true
+    }
+  },
+  {
+    path: '/classroom',
+    name: 'Classroom',
+    component: () => import('../views/Classroom.vue'),
+    meta: {
+      requiresAuth: true,
+      adminOnly: true
     }
   }
 ]
