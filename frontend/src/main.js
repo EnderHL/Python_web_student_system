@@ -9,6 +9,9 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+// 引入全局样式修复
+import './styles/global_fixes.css'
+
 // 创建应用实例
 const app = createApp(App)
 
