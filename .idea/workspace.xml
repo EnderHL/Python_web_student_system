@@ -4,18 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6db1530d-9aee-4583-a19c-7b8cc9b985f8" name="更改" comment="登录，教师，学生模块，前端完善">
+    <list default="true" id="6db1530d-9aee-4583-a19c-7b8cc9b985f8" name="更改" comment="完善字体，背景">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/development_progress.md" beforeDir="false" afterPath="$PROJECT_DIR$/development_progress.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/App.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/App.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/router/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/router/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/src/views/Home.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Home.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/frontend_optimization_plan.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/frontend_optimization_plan.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/styles/Login.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/Login.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/styles/Register.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/Register.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/styles/Student.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/Student.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/styles/Teacher.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/styles/Teacher.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/views/Login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Login.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/views/Register.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Register.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/views/Student.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Student.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/views/Teacher.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/views/Teacher.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python_web_student_system/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/python_web_student_system/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python_web_student_system/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/python_web_student_system/urls.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,29 +48,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Django 服务器.python_web_student_system.executor": "Run",
-    "RunOnceActivity.OpenDjangoStructureViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.pycharm.django.structure.promotion.once.per.project": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "master",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.github.ui.GithubSettingsConfigurable",
-    "ts.external.directory.path": "D:\\Study\\JetBrains\\PyCharm\\PyCharm 2024.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Django 服务器.python_web_student_system.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.pycharm.django.structure.promotion.once.per.project&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.github.ui.GithubSettingsConfigurable&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\Study\\JetBrains\\PyCharm\\PyCharm 2024.2.1\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
-  "keyToStringList": {
-    "DatabaseDriversLRU": [
-      "mysql_aurora"
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql_aurora&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\Study\Project\py_project\python_web_student_system" />
@@ -122,6 +123,7 @@
       <workItem from="1757557931840" duration="14165000" />
       <workItem from="1757900790457" duration="5761000" />
       <workItem from="1758163007972" duration="12263000" />
+      <workItem from="1758505538023" duration="3028000" />
     </task>
     <task id="LOCAL-00001" summary="build">
       <option name="closed" value="true" />
@@ -147,7 +149,31 @@
       <option name="project" value="LOCAL" />
       <updated>1758423207103</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="完善侧边栏">
+      <option name="closed" value="true" />
+      <created>1758505615805</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1758505615805</updated>
+    </task>
+    <task id="LOCAL-00005" summary="完善字体，背景">
+      <option name="closed" value="true" />
+      <created>1758509063475</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1758509063475</updated>
+    </task>
+    <task id="LOCAL-00006" summary="完善字体，背景">
+      <option name="closed" value="true" />
+      <created>1758509071482</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1758509071482</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -168,6 +194,8 @@
     <MESSAGE value="build" />
     <MESSAGE value="完成学生管理模块,新建教师管理模块" />
     <MESSAGE value="登录，教师，学生模块，前端完善" />
-    <option name="LAST_COMMIT_MESSAGE" value="登录，教师，学生模块，前端完善" />
+    <MESSAGE value="完善侧边栏" />
+    <MESSAGE value="完善字体，背景" />
+    <option name="LAST_COMMIT_MESSAGE" value="完善字体，背景" />
   </component>
 </project>
