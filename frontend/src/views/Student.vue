@@ -1,6 +1,6 @@
 <template>
   <div class="student-container">
-    <main class="main-content">
+    <div class="student-main">
       <div class="student-header">
         <h2>学生管理</h2>
         <el-button @click="showAddForm = !showAddForm" :type="showAddForm ? 'default' : 'primary'"
@@ -198,7 +198,7 @@
 
       <!-- 错误提示 -->
       <el-message v-if="error" type="error" :message="error" :show-close="true" />
-    </main>
+    </div>
   </div>
 </template>
 
@@ -478,6 +478,12 @@ export default {
   <style scoped>
   .student-container {
     width: 100%;
+  }
+  
+  .student-main {
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
   }
   
   .card-header {

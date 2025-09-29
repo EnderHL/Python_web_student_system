@@ -1,78 +1,269 @@
 import { ref, computed, onMounted } from 'vue';
+import { ref as vueRef, computed as vueComputed, onMounted as vueOnMounted } from 'vue';
 import axios from './../utils/axios';
 
-// 模拟数据
-const MOCK_COURSES = [
-  { id: 1, name: '高等数学', code: 'MATH101', type: '必修', credit: 4, totalHours: 64, teacherId: 1, classroomId: 1, maxStudents: 100, enrolledStudents: 85, createdAt: '2023-09-01T08:00:00' },
-  { id: 2, name: '大学物理', code: 'PHYS101', type: '必修', credit: 3, totalHours: 48, teacherId: 2, classroomId: 2, maxStudents: 80, enrolledStudents: 72, createdAt: '2023-09-01T09:00:00' },
-  { id: 3, name: '程序设计基础', code: 'CS101', type: '必修', credit: 4, totalHours: 64, teacherId: 3, classroomId: 3, maxStudents: 60, enrolledStudents: 58, createdAt: '2023-09-01T10:00:00' },
-  { id: 4, name: '数据结构', code: 'CS201', type: '必修', credit: 4, totalHours: 64, teacherId: 3, classroomId: 4, maxStudents: 60, enrolledStudents: 56, createdAt: '2023-09-01T14:00:00' },
-  { id: 5, name: '操作系统', code: 'CS202', type: '必修', credit: 4, totalHours: 64, teacherId: 4, classroomId: 5, maxStudents: 60, enrolledStudents: 54, createdAt: '2023-09-01T15:00:00' },
-  { id: 6, name: '数据库原理', code: 'CS301', type: '必修', credit: 4, totalHours: 64, teacherId: 5, classroomId: 6, maxStudents: 60, enrolledStudents: 52, createdAt: '2023-09-01T16:00:00' },
-  { id: 7, name: '人工智能导论', code: 'CS401', type: '选修', credit: 3, totalHours: 48, teacherId: 6, classroomId: 7, maxStudents: 50, enrolledStudents: 48, createdAt: '2023-09-02T08:00:00' },
-  { id: 8, name: '云计算', code: 'CS402', type: '选修', credit: 3, totalHours: 48, teacherId: 7, classroomId: 8, maxStudents: 40, enrolledStudents: 38, createdAt: '2023-09-02T09:00:00' },
-  { id: 9, name: '网络安全', code: 'CS403', type: '选修', credit: 3, totalHours: 48, teacherId: 8, classroomId: 9, maxStudents: 40, enrolledStudents: 36, createdAt: '2023-09-02T10:00:00' },
-  { id: 10, name: 'Python数据分析', code: 'CS404', type: '选修', credit: 3, totalHours: 48, teacherId: 9, classroomId: 10, maxStudents: 40, enrolledStudents: 34, createdAt: '2023-09-02T14:00:00' },
-  { id: 11, name: '机器学习', code: 'CS501', type: '选修', credit: 4, totalHours: 64, teacherId: 10, classroomId: 11, maxStudents: 30, enrolledStudents: 28, createdAt: '2023-09-02T15:00:00' },
-  { id: 12, name: '深度学习', code: 'CS502', type: '选修', credit: 4, totalHours: 64, teacherId: 10, classroomId: 12, maxStudents: 30, enrolledStudents: 26, createdAt: '2023-09-02T16:00:00' }
-];
+// API 函数
+// 获取课程列表
+export const fetchCourses = async (params = {}) => {
+  try {
+    const response = await axios.get('/courses/', { params });
+    return response.data;
+  } catch (error) {
+    console.error('获取课程列表失败:', error);
+    throw error;
+  }
+};
 
-const MOCK_TEACHERS = [
-  { id: 1, name: '张三', department: '数学学院', title: '教授' },
-  { id: 2, name: '李四', department: '物理学院', title: '副教授' },
-  { id: 3, name: '王五', department: '计算机学院', title: '教授' },
-  { id: 4, name: '赵六', department: '计算机学院', title: '副教授' },
-  { id: 5, name: '孙七', department: '计算机学院', title: '教授' },
-  { id: 6, name: '周八', department: '人工智能学院', title: '教授' },
-  { id: 7, name: '吴九', department: '人工智能学院', title: '副教授' },
-  { id: 8, name: '郑十', department: '网络空间安全学院', title: '教授' },
-  { id: 9, name: '钱十一', department: '数据科学学院', title: '副教授' },
-  { id: 10, name: '孙十二', department: '人工智能学院', title: '教授' }
-];
+// 获取单个课程详情
+export const fetchCourseDetail = async (courseId) => {
+  try {
+    const response = await axios.get(`/courses/${courseId}/`);
+    return response.data;
+  } catch (error) {
+    console.error('获取课程详情失败:', error);
+    throw error;
+  }
+};
 
-const MOCK_CLASSROOMS = [
-  { id: 1, name: 'A101', capacity: 100, location: 'A栋1楼' },
-  { id: 2, name: 'A102', capacity: 80, location: 'A栋1楼' },
-  { id: 3, name: 'B201', capacity: 60, location: 'B栋2楼' },
-  { id: 4, name: 'B202', capacity: 60, location: 'B栋2楼' },
-  { id: 5, name: 'B301', capacity: 60, location: 'B栋3楼' },
-  { id: 6, name: 'B302', capacity: 60, location: 'B栋3楼' },
-  { id: 7, name: 'C101', capacity: 50, location: 'C栋1楼' },
-  { id: 8, name: 'C102', capacity: 40, location: 'C栋1楼' },
-  { id: 9, name: 'C201', capacity: 40, location: 'C栋2楼' },
-  { id: 10, name: 'C202', capacity: 40, location: 'C栋2楼' },
-  { id: 11, name: 'D101', capacity: 30, location: 'D栋1楼' },
-  { id: 12, name: 'D102', capacity: 30, location: 'D栋1楼' }
-];
+// 创建课程
+export const createCourse = async (courseData) => {
+  try {
+    const response = await axios.post('/courses/', courseData);
+    return response.data;
+  } catch (error) {
+    console.error('创建课程失败:', error);
+    throw error;
+  }
+};
+
+// 更新课程
+export const updateCourse = async (courseId, courseData) => {
+  try {
+    const response = await axios.put(`/courses/${courseId}/`, courseData);
+    return response.data;
+  } catch (error) {
+    console.error('更新课程失败:', error);
+    throw error;
+  }
+};
+
+// 删除课程
+export const deleteCourse = async (courseId) => {
+  try {
+    const response = await axios.delete(`/courses/${courseId}/`);
+    return response.data;
+  } catch (error) {
+    console.error('删除课程失败:', error);
+    throw error;
+  }
+};
+
+// 获取教师列表
+export const fetchTeachers = async () => {
+  try {
+    const response = await axios.get('/teachers/');
+    // 确保返回数组
+    return Array.isArray(response.data) ? response.data : [];
+  } catch (error) {
+    console.error('获取教师列表失败:', error);
+    // 如果API调用失败，返回空数组
+    return [];
+  }
+};
+
+// 获取教室列表
+export const fetchClassrooms = async () => {
+  try {
+    const response = await axios.get('/classrooms/');
+    return response.data;
+  } catch (error) {
+    console.error('获取教室列表失败:', error);
+    // 如果API调用失败，返回空数组
+    return [];
+  }
+};
+
+// 创建教师-课程关联
+export const createTeachingAssignment = async (data) => {
+  try {
+    const response = await axios.post('/teaching_assignments/', data);
+    return response.data;
+  } catch (error) {
+    console.error('创建教师-课程关联失败:', error);
+    throw error;
+  }
+};
+
+// 获取课程的教师-课程关联
+export const fetchTeachingAssignments = async (courseId) => {
+  try {
+    const response = await axios.get('/teaching_assignments/', { params: { course_id: courseId } });
+    // 确保返回数组
+    return Array.isArray(response.data) ? response.data : [];
+  } catch (error) {
+    console.error(`获取课程 ${courseId} 的教师关联失败:`, error);
+    return [];
+  }
+};
+
+// 获取选课记录
+export const fetchEnrollments = async (params = {}) => {
+  try {
+    const response = await axios.get('/enrollments/', { params });
+    return response.data;
+  } catch (error) {
+    console.error('获取选课记录失败:', error);
+    throw error;
+  }
+};
+
+// 格式化课程类型显示
+export const formatCourseType = (courseType) => {
+  const typeMap = {
+    'required': '必修',
+    'elective': '选修',
+    'general': '通识',
+    'compulsory': '必修',
+    'optional': '选修'
+  };
+  return typeMap[courseType] || courseType;
+};
+
+// 格式化教学方式显示
+export const formatTeachingMethod = (method) => {
+  const methodMap = {
+    'online': '线上',
+    'offline': '线下'
+  };
+  return methodMap[method] || method;
+};
+
+// 根据教学方式和教室自动设置容量
+export const setCapacityByTeachingMethod = (teachingMethod, classroomId = null, classrooms = []) => {
+  if (teachingMethod === 'online') {
+    return 1000; // 线上课程默认容量为1000
+  } else if (teachingMethod === 'offline' && classroomId && classrooms.length > 0) {
+    const classroom = classrooms.find(c => c.id === classroomId);
+    return classroom ? classroom.capacity : 50; // 线下课程根据教室容量设置，默认50人
+  }
+  return 50; // 默认值
+};
+
+// 验证课程数据
+export const validateCourseData = (courseData) => {
+  const errors = {};
+  
+  // 必填字段验证
+  if (!courseData.name || courseData.name.trim() === '') {
+    errors.name = '课程名称不能为空';
+  }
+  
+  if (!courseData.code || courseData.code.trim() === '') {
+    errors.code = '课程代码不能为空';
+  }
+  
+  if (!courseData.course_type) {
+    errors.course_type = '课程类型不能为空';
+  }
+  
+  if (!courseData.credits || courseData.credits <= 0) {
+    errors.credits = '学分必须大于0';
+  }
+  
+  if (!courseData.total_hours || courseData.total_hours <= 0) {
+    errors.total_hours = '总学时必须大于0';
+  }
+  
+  if (!courseData.teacher_id) {
+    errors.teacher_id = '教师不能为空';
+  }
+  
+  // 线下课程必须选择教室
+  if (courseData.teaching_method === 'offline' && !courseData.classroom_id) {
+    errors.classroom_id = '线下课程必须选择教室';
+  }
+  
+  if (!courseData.max_students || courseData.max_students <= 0) {
+    errors.max_students = '最大学生数必须大于0';
+  }
+  
+  if (!courseData.semester || courseData.semester.trim() === '') {
+    errors.semester = '学期不能为空';
+  }
+  
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
+};
+
+// 获取课程统计数据
+export const getCourseStatistics = (courses = []) => {
+  // 根据实际数据统计
+  const totalCourses = courses.length;
+  const requiredCourses = courses.filter(course => 
+    ['required', '必修'].includes(course.course_type)
+  ).length;
+  const electiveCourses = courses.filter(course => 
+    ['elective', '选修'].includes(course.course_type)
+  ).length;
+  const onlineCourses = courses.filter(course => course.teaching_method === 'online').length;
+  const offlineCourses = courses.filter(course => course.teaching_method === 'offline').length;
+  const totalStudents = courses.reduce((sum, course) => sum + (course.current_students || course.enrolled_students || 0), 0);
+  
+  return {
+    totalCourses,
+    requiredCourses,
+    electiveCourses,
+    onlineCourses,
+    offlineCourses,
+    totalStudents
+  };
+};
+
+// 格式化日期
+export const formatDate = (dateString) => {
+  if (!dateString) return '';
+  try {
+    const date = new Date(dateString);
+    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+  } catch (error) {
+    return dateString;
+  }
+};
 
 // 课程管理功能模块
 export default function CourseManager() {
   // 状态管理
-  const userInfo = ref({ name: '管理员', role: '系统管理员' });
-  const courses = ref(MOCK_COURSES);
-  const teachers = ref(MOCK_TEACHERS);
-  const classrooms = ref(MOCK_CLASSROOMS);
-  const showAddCourseForm = ref(false);
-  const showEditCourseForm = ref(false);
-  const showCourseDetails = ref(false);
-  const selectedCourse = ref({});
-  const editingCourse = ref({});
-  const filterType = ref('');
-  const searchQuery = ref('');
-  const currentPage = ref(1);
-  const pageSize = ref(10);
+  const userInfo = vueRef({ name: '管理员', role: '系统管理员' });
+  const courses = vueRef([]);
+  const teachers = vueRef([]);
+  const classrooms = vueRef([]);
+  const showAddCourseForm = vueRef(false);
+  const showEditCourseForm = vueRef(false);
+  const showCourseDetails = vueRef(false);
+  const selectedCourse = vueRef({});
+  const editingCourse = vueRef({});
+  const filterType = vueRef('');
+  const searchQuery = vueRef('');
+  const currentPage = vueRef(1);
+  const pageSize = vueRef(10);
+  const isLoading = vueRef(false);
+  const error = vueRef('');
   
   // 新课程表单数据
-  const newCourse = ref({
+  const newCourse = vueRef({
     name: '',
     code: '',
     type: '必修',
-    credit: 0,
-    totalHours: 0,
+    credit: 3,
+    totalHours: 48,
     teacherId: '',
     classroomId: '',
-    maxStudents: 0,
-    enrolledStudents: 0
+    maxStudents: 50,
+    enrolledStudents: 0,
+    teachingMethod: 'offline',
+    semester: ''
   });
   
   // 加载用户信息
@@ -82,104 +273,80 @@ export default function CourseManager() {
       userInfo.value = response.data;
     } catch (error) {
       console.error('加载用户信息失败:', error);
-      // 使用模拟数据
+      // 提供默认的认证信息以确保可以继续获取数据
+      userInfo.value = { name: '管理员', role: '系统管理员' };
+      // 在localStorage中设置一个临时token以便测试
+      localStorage.setItem('token', 'temporary_test_token');
     }
   };
   
   // 获取课程列表
-  const fetchCourses = async () => {
+  const loadCourses = async () => {
+    isLoading.value = true;
+    error.value = '';
     try {
-      const response = await axios.get('/courses/');
-      courses.value = response.data;
+      const coursesData = await fetchCourses();
+      // 检查返回的数据是否是分页对象
+      if (coursesData && coursesData.results && Array.isArray(coursesData.results)) {
+        // 如果是分页对象，使用results数组
+        courses.value = coursesData.results;
+      } else if (Array.isArray(coursesData)) {
+        // 如果已经是数组，直接使用
+        courses.value = coursesData;
+      } else {
+        // 否则使用空数组
+        courses.value = [];
+      }
+      
+      // 为每个课程加载教师信息
+      await Promise.all(
+        courses.value.map(async (course) => {
+          try {
+            const assignments = await fetchTeachingAssignments(course.id);
+            // 确保assignments是数组
+            if (Array.isArray(assignments)) {
+              course.teachers = assignments.map(assignment => assignment.teacher_id);
+            } else {
+              course.teachers = [];
+            }
+          } catch (error) {
+            console.error(`获取课程 ${course.id} 的教师信息失败:`, error);
+            course.teachers = [];
+          }
+        })
+      );
     } catch (error) {
       console.error('获取课程列表失败:', error);
-      // 确保使用模拟数据
-      courses.value = MOCK_COURSES;
+      error.value = '获取课程列表失败，请稍后再试';
+      // 初始化空数组
+      courses.value = [];
+    } finally {
+      isLoading.value = false;
     }
   };
   
-  // 添加课程
-  const addCourse = async () => {
+  // 加载教师列表
+  const loadTeachers = async () => {
     try {
-      // 模拟添加课程
-      const newId = Math.max(...courses.value.map(c => c.id)) + 1;
-      const courseToAdd = {
-        ...newCourse.value,
-        id: newId,
-        enrolledStudents: 0,
-        createdAt: new Date().toISOString()
-      };
-      courses.value.push(courseToAdd);
-      
-      // 重置表单
-      newCourse.value = {
-        name: '',
-        code: '',
-        type: '必修',
-        credit: 0,
-        totalHours: 0,
-        teacherId: '',
-        classroomId: '',
-        maxStudents: 0,
-        enrolledStudents: 0
-      };
-      
-      showAddCourseForm.value = false;
+      const teachersData = await fetchTeachers();
+      teachers.value = teachersData;
     } catch (error) {
-      console.error('添加课程失败:', error);
+      console.error('获取教师列表失败:', error);
+      // 初始化空数组
+      teachers.value = [];
     }
   };
   
-  // 查看课程详情
-  const viewCourseDetails = (id) => {
-    const course = courses.value.find(c => c.id === id);
-    if (course) {
-      selectedCourse.value = { ...course };
-      showCourseDetails.value = true;
-    }
-  };
-  
-  // 编辑课程
-  const editCourse = (id) => {
-    const course = courses.value.find(c => c.id === id);
-    if (course) {
-      editingCourse.value = { ...course };
-      showEditCourseForm.value = true;
-    }
-  };
-  
-  // 更新课程
-  const updateCourse = async () => {
+  // 加载教室列表
+  const loadClassrooms = async () => {
     try {
-      const index = courses.value.findIndex(c => c.id === editingCourse.value.id);
-      if (index !== -1) {
-        courses.value[index] = { ...editingCourse.value };
-        showEditCourseForm.value = false;
-      }
+      const classroomsData = await fetchClassrooms();
+      classrooms.value = classroomsData;
     } catch (error) {
-      console.error('更新课程失败:', error);
+      console.error('获取教室列表失败:', error);
+      // 初始化空数组
+      classrooms.value = [];
     }
-  };
-  
-  // 删除课程
-  const deleteCourse = async (id) => {
-    if (confirm('确定要删除这门课程吗？')) {
-      try {
-        const index = courses.value.findIndex(c => c.id === id);
-        if (index !== -1) {
-          courses.value.splice(index, 1);
-        }
-      } catch (error) {
-        console.error('删除课程失败:', error);
-      }
-    }
-  };
-  
-  // 格式化日期
-  const formatDate = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
   };
   
   // 根据教师ID获取教师名称
@@ -194,15 +361,276 @@ export default function CourseManager() {
     return classroom ? classroom.name : '未知';
   };
   
+  // 重置新课程表单
+  const resetNewCourse = () => {
+    newCourse.value = {
+      name: '',
+      code: '',
+      course_type: '必修',
+      credit: 3,
+      totalHours: 48,
+      teacherId: '',
+      classroomId: '',
+      maxStudents: 50,
+      enrolledStudents: 0,
+      teachingMethod: 'offline',
+      semester: ''
+    };
+  };
+  
+  // 添加课程
+  const addCourse = async () => {
+    try {
+      // 准备课程数据，确保字段名与后端一致
+      const courseData = {
+        name: newCourse.value.name,
+        code: newCourse.value.code,
+        course_type: newCourse.value.type === '必修' ? 'required' : (newCourse.value.type === '选修' ? 'elective' : 'general'),
+        credits: newCourse.value.credit,
+        total_hours: newCourse.value.totalHours,
+        classroom_id: newCourse.value.teachingMethod === 'online' ? null : newCourse.value.classroomId,
+        teaching_method: newCourse.value.teachingMethod || 'offline',
+        semester: newCourse.value.semester || ''
+      };
+      
+      // 根据教学方式自动设置最大学生数
+      if (newCourse.value.teachingMethod === 'online') {
+        courseData.max_students = 1000; // 线上课程默认容量为1000
+      } else if (newCourse.value.classroomId) {
+        // 线下课程根据教室容量设置
+        const classroom = classrooms.value.find(c => c.id === newCourse.value.classroomId);
+        courseData.max_students = classroom ? classroom.capacity : 50; // 默认值
+      } else {
+        courseData.max_students = 50; // 默认值
+      }
+      
+      courseData.enrolled_students = 0;
+      
+      // 验证课程数据
+      const validation = validateCourseData(courseData);
+      if (!validation.isValid) {
+        // 收集所有验证错误并显示
+        const errorMessages = Object.values(validation.errors).join('\n');
+        alert(errorMessages);
+        return;
+      }
+      
+      // 调用API添加课程
+      const createdCourse = await createCourse(courseData);
+      
+      // 处理教师-课程关联
+      if (newCourse.value.teacherId && Array.isArray(newCourse.value.teacherId)) {
+        for (const teacherId of newCourse.value.teacherId) {
+          await createTeachingAssignment({
+            course_id: createdCourse.id,
+            teacher_id: teacherId
+          });
+        }
+      } else if (newCourse.value.teacherId) {
+        await createTeachingAssignment({
+          course_id: createdCourse.id,
+          teacher_id: newCourse.value.teacherId
+        });
+      }
+      
+      courses.value.push(createdCourse);
+      
+      // 重置表单
+      resetNewCourse();
+      showAddCourseForm.value = false;
+      alert('课程创建成功！');
+    } catch (error) {
+      console.error('添加课程失败:', error);
+      alert('添加课程失败，请稍后再试');
+    }
+  };
+  
+  // 查看课程详情
+  const viewCourseDetails = async (id) => {
+    try {
+      // 从API获取详细信息
+      const courseDetail = await fetchCourseDetail(id);
+      // 获取教师-课程关联
+      const assignments = await fetchTeachingAssignments(id);
+      courseDetail.teachers = assignments.map(assignment => assignment.teacher_id);
+      selectedCourse.value = courseDetail;
+      showCourseDetails.value = true;
+    } catch (error) {
+      console.error('查看课程详情失败:', error);
+      alert('查看课程详情失败，请稍后再试');
+      // 如果API失败，从本地数据查找
+      const courseList = Array.isArray(courses.value) ? courses.value : [];
+      const course = courseList.find(c => c.id === id);
+      if (course) {
+        selectedCourse.value = { ...course };
+        showCourseDetails.value = true;
+      }
+    }
+  };
+  
+  // 编辑课程
+  const editCourse = (id) => {
+    // 确保courses.value是数组
+    const courseList = Array.isArray(courses.value) ? courses.value : [];
+    const course = courseList.find(c => c.id === id);
+    if (course) {
+      // 转换课程类型为中文显示
+      const typeMap = {
+        'required': '必修',
+        'elective': '选修',
+        'general': '通识'
+      };
+      
+      editingCourse.value = {
+        ...course,
+        type: typeMap[course.course_type] || course.course_type,
+        credit: course.credits || 0,
+        totalHours: course.total_hours || 0,
+        teacherId: course.teacher_id || '',
+        classroomId: course.classroom_id || '',
+        maxStudents: course.max_students || 50,
+        enrolledStudents: course.current_students || course.enrolled_students || 0,
+        teachingMethod: course.teaching_method || 'offline'
+      };
+      showEditCourseForm.value = true;
+    }
+  };
+  
+  // 更新课程
+  const handleUpdateCourse = async () => {
+    try {
+      // 准备更新数据
+      const courseData = {
+        ...editingCourse.value,
+        course_type: editingCourse.value.type === '必修' ? 'required' : (editingCourse.value.type === '选修' ? 'elective' : 'general'),
+        credits: editingCourse.value.credit,
+        total_hours: editingCourse.value.totalHours,
+        classroom_id: editingCourse.value.teaching_method === 'online' ? null : editingCourse.value.classroom_id,
+        teaching_method: editingCourse.value.teaching_method || 'offline',
+        semester: editingCourse.value.semester || ''
+      };
+      
+      // 根据教学方式自动设置最大学生数
+      if (editingCourse.value.teaching_method === 'online') {
+        courseData.max_students = 1000; // 线上课程默认容量为1000
+      } else if (editingCourse.value.classroom_id) {
+        // 线下课程根据教室容量设置
+        const classroom = classrooms.value.find(c => c.id === editingCourse.value.classroom_id);
+        courseData.max_students = classroom ? classroom.capacity : 50; // 默认50人
+      }
+      
+      // 验证课程数据
+      const validation = validateCourseData(courseData);
+      if (!validation.isValid) {
+        // 收集所有验证错误并显示
+        const errorMessages = Object.values(validation.errors).join('\n');
+        alert(errorMessages);
+        return;
+      }
+      
+      // 调用API更新课程
+      const updatedCourse = await updateCourse(editingCourse.value.id, courseData);
+      
+      // 处理教师-课程关联更新
+      if (courseData.teachers && Array.isArray(courseData.teachers)) {
+        // 先获取当前的教师关联
+        const currentAssignments = await fetchTeachingAssignments(editingCourse.value.id);
+        const currentTeacherIds = currentAssignments.map(assignment => assignment.teacher_id);
+        
+        // 删除不再关联的教师
+        const teachersToRemove = currentTeacherIds.filter(id => !courseData.teachers.includes(id));
+        for (const assignment of currentAssignments) {
+          if (teachersToRemove.includes(assignment.teacher_id)) {
+            await axios.delete(`/teaching_assignments/${assignment.id}/`);
+          }
+        }
+        
+        // 添加新关联的教师
+        const teachersToAdd = courseData.teachers.filter(id => !currentTeacherIds.includes(id));
+        for (const teacherId of teachersToAdd) {
+          await createTeachingAssignment({
+            course_id: editingCourse.value.id,
+            teacher_id: teacherId
+          });
+        }
+      }
+      
+      // 更新本地数据
+      if (!Array.isArray(courses.value)) {
+        courses.value = [];
+      }
+      const index = courses.value.findIndex(c => c.id === editingCourse.value.id);
+      if (index !== -1) {
+        courses.value[index] = updatedCourse;
+      }
+      
+      showEditCourseForm.value = false;
+      alert('课程更新成功！');
+    } catch (error) {
+      console.error('更新课程失败:', error);
+      alert('更新课程失败，请稍后再试');
+    }
+  };
+  
+  // 删除课程
+  const handleDeleteCourse = async (id) => {
+    if (confirm('确定要删除这门课程吗？删除后无法恢复！')) {
+      try {
+        // 调用API删除课程
+        await deleteCourse(id);
+        
+        // 更新本地数据
+        if (!Array.isArray(courses.value)) {
+          courses.value = [];
+        }
+        const index = courses.value.findIndex(c => c.id === id);
+        if (index !== -1) {
+          courses.value.splice(index, 1);
+        }
+        alert('课程删除成功！');
+      } catch (error) {
+        console.error('删除课程失败:', error);
+        alert('删除课程失败，请稍后再试');
+      }
+    }
+  };
+  
+  // 切换页面
+  const changePage = (page) => {
+    if (page >= 1 && page <= totalPages.value) {
+      currentPage.value = page;
+    }
+  };
+  
+  // 重置筛选条件
+  const resetFilters = () => {
+    filterType.value = '';
+    searchQuery.value = '';
+    currentPage.value = 1;
+  };
+  
   // 筛选和搜索课程
-  const filteredCourses = computed(() => {
+  const filteredCourses = vueComputed(() => {
     // 确保courses.value始终是数组
-    const courseList = Array.isArray(courses.value) ? courses.value : MOCK_COURSES;
+    const courseList = Array.isArray(courses.value) ? courses.value : [];
     let result = [...courseList];
     
     // 按课程类型筛选
     if (filterType.value) {
-      result = result.filter(course => course.type === filterType.value);
+      result = result.filter(course => {
+        // 确保使用正确的字段名course_type
+        if (typeof course.course_type === 'string') {
+          // 将前端选择的中文课程类型转换为后端存储的英文类型
+          const typeMap = {
+            '必修': 'required',
+            '选修': 'elective',
+            '通识': 'general'
+          };
+          const filterValue = typeMap[filterType.value] || filterType.value;
+          return course.course_type === filterValue;
+        }
+        return false;
+      });
     }
     
     // 搜索
@@ -221,14 +649,27 @@ export default function CourseManager() {
   });
   
   // 计算总页数
-  const totalPages = computed(() => {
+  const totalPages = vueComputed(() => {
     // 确保courses.value始终是数组
-    const courseList = Array.isArray(courses.value) ? courses.value : MOCK_COURSES;
+    const courseList = Array.isArray(courses.value) ? courses.value : [];
     let result = [...courseList];
     
     // 按课程类型筛选
     if (filterType.value) {
-      result = result.filter(course => course.type === filterType.value);
+      result = result.filter(course => {
+        // 确保使用正确的字段名course_type
+        if (typeof course.course_type === 'string') {
+          // 将前端选择的中文课程类型转换为后端存储的英文类型
+          const typeMap = {
+            '必修': 'required',
+            '选修': 'elective',
+            '通识': 'general'
+          };
+          const filterValue = typeMap[filterType.value] || filterType.value;
+          return course.course_type === filterValue;
+        }
+        return false;
+      });
     }
     
     // 搜索
@@ -243,9 +684,11 @@ export default function CourseManager() {
   });
   
   // 组件挂载时加载数据
-  onMounted(() => {
+  vueOnMounted(() => {
     loadUserInfo();
-    fetchCourses();
+    loadCourses();
+    loadTeachers();
+    loadClassrooms();
   });
   
   // 返回所有需要的值和方法
@@ -262,16 +705,25 @@ export default function CourseManager() {
     filterType,
     searchQuery,
     currentPage,
+    pageSize,
     newCourse,
     filteredCourses,
     totalPages,
+    isLoading,
+    error,
     addCourse,
     viewCourseDetails,
     editCourse,
-    updateCourse,
-    deleteCourse,
+    handleUpdateCourse,
+    handleDeleteCourse,
     formatDate,
+    formatCourseType,
+    formatTeachingMethod,
     getTeacherName,
-    getClassName
+    getClassName,
+    changePage,
+    resetFilters,
+    loadCourses,
+    resetNewCourse
   };
 }

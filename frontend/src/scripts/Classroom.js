@@ -14,7 +14,7 @@ export default {
     const loadUserInfo = async () => {
       try {
         if (!user.value) {
-          const response = await api.get('/api/user/me/')
+          const response = await api.get('/users/me/')
           user.value = response.data
           localStorage.setItem('user', JSON.stringify(response.data))
         }

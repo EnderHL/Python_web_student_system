@@ -1,6 +1,5 @@
 <template>
   <div class="schedule-container">
-    <main class="main-content">
         <div class="schedule-header">
           <h2>排课管理</h2>
           <button @click="showAddForm = !showAddForm" class="add-btn">
@@ -18,7 +17,7 @@
                 <select v-model="scheduleForm.course" required @change="onCourseChange">
                   <option value="">请选择课程</option>
                   <option v-for="course in courses" :key="course.id" :value="course.id">
-                    {{ course.name }} ({{ course.code }})
+                    {{ course.name }} ({{ course.code }}) - {{ course.teaching_method === 'online' ? '线上' : '线下' }}
                   </option>
                 </select>
               </div>
@@ -33,12 +32,16 @@
               </div>
               <div class="form-group">
                 <label>教室</label>
-                <select v-model="scheduleForm.classroom" required>
+                <select v-model="scheduleForm.classroom" :required="!isCurrentCourseOnline">
                   <option value="">请选择教室</option>
-                  <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
+                  <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id" :disabled="isCurrentCourseOnline">
                     {{ classroom.name }} ({{ classroom.location }}，容量：{{ classroom.capacity }})
                   </option>
+                  <option v-if="isCurrentCourseOnline" value="" disabled selected>
+                    线上课程无需选择教室
+                  </option>
                 </select>
+                <span v-if="isCurrentCourseOnline" class="online-course-note">线上课程容量固定为1000人</span>
               </div>
             </div>
             <div class="form-row">
@@ -236,7 +239,7 @@
                 <select v-model="editForm.course" required @change="onEditCourseChange">
                   <option value="">请选择课程</option>
                   <option v-for="course in courses" :key="course.id" :value="course.id">
-                    {{ course.name }} ({{ course.code }})
+                    {{ course.name }} ({{ course.code }}) - {{ course.teaching_method === 'online' ? '线上' : '线下' }}
                   </option>
                 </select>
               </div>
@@ -251,12 +254,16 @@
               </div>
               <div class="form-group">
                 <label>教室</label>
-                <select v-model="editForm.classroom" required>
+                <select v-model="editForm.classroom" :required="!isEditCourseOnline">
                   <option value="">请选择教室</option>
-                  <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id">
+                  <option v-for="classroom in classrooms" :key="classroom.id" :value="classroom.id" :disabled="isEditCourseOnline">
                     {{ classroom.name }} ({{ classroom.location }}，容量：{{ classroom.capacity }})
                   </option>
+                  <option v-if="isEditCourseOnline" value="" disabled selected>
+                    线上课程无需选择教室
+                  </option>
                 </select>
+                <span v-if="isEditCourseOnline" class="online-course-note">线上课程容量固定为1000人</span>
               </div>
             </div>
             <div class="form-row">
@@ -306,7 +313,6 @@
             </div>
           </form>
         </el-dialog>
-      </main>
   </div>
 </template>
 
@@ -314,7 +320,9 @@
 
   <style scoped>
   .schedule-container {
+    padding: 20px;
     width: 100%;
+    box-sizing: border-box;
   }
   </style>
   

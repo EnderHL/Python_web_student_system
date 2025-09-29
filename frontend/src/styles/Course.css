@@ -142,7 +142,7 @@ body {
 /* 通用按钮样式 */
 .btn {
   border: none;
-  padding: 10px 16px;
+  padding: 12px 20px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
@@ -153,6 +153,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
+  text-align: center;
 }
 
 /* 添加按钮 */
@@ -338,6 +339,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 10;
+  text-align: center;
 }
 
 .course-list tr:hover {
@@ -379,7 +381,7 @@ body {
 /* 小型操作按钮 */
 .action-btn {
   border: none;
-  padding: 4px 10px;
+  padding: 6px 12px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
@@ -387,6 +389,7 @@ body {
   transition: all 0.3s ease;
   text-decoration: none;
   white-space: nowrap;
+  text-align: center;
 }
 
 .view-btn {
@@ -433,13 +436,14 @@ body {
   background-color: white;
   color: #3498db;
   border: 1px solid #3498db;
-  padding: 8px 12px;
+  padding: 10px 16px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
   transition: all 0.3s ease;
-  min-width: 40px;
+  min-width: 60px;
+  text-align: center;
 }
 
 .pagination button:hover:not(:disabled) {
@@ -571,6 +575,32 @@ body {
   }
 }
 
+/* 按钮样式优化 - 增大指定按钮类型的尺寸 */
+.el-button--info.is-plain,
+.el-button--danger.is-plain,
+.el-button--primary.is-plain {
+  padding: 12px 24px;
+  font-size: 15px;
+  min-width: 80px;
+  transition: all 0.3s ease;
+}
+
+/* 按钮组内的水平间距优化 */
+.button-row .el-button,
+.form-actions .el-button,
+.dialog-actions .el-button,
+.action-buttons .el-button {
+  margin-right: 12px;
+  text-align: center;
+}
+
+.button-row .el-button:last-child,
+.form-actions .el-button:last-child,
+.dialog-actions .el-button:last-child,
+.action-buttons .el-button:last-child {
+  margin-right: 0;
+}
+
 /* 响应式设计 */
 @media (max-width: 1024px) {
   .sidebar {
@@ -584,6 +614,22 @@ body {
 }
 
 @media (max-width: 768px) {
+  /* 响应式布局优化 */
+  .button-row,
+  .form-actions,
+  .dialog-actions {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .el-button--info.is-plain,
+  .el-button--danger.is-plain,
+  .el-button--primary.is-plain {
+    width: 100%;
+    justify-content: center;
+    margin-right: 0 !important;
+  }
+  
   .main-layout {
     flex-direction: column;
   }
@@ -627,6 +673,7 @@ body {
   .course-list td {
     padding: 10px;
     font-size: 12px;
+    text-align: center;
   }
   
   .action-buttons {

@@ -1,10 +1,8 @@
-import axios from 'axios';
-
-// API基础URL
-const BASE_URL = 'http://127.0.0.1:8000/api/auth/';
+// 导入项目的axios实例
+import api from './src/utils/axios.js'
 
 // 测试函数
-async function testNavbarAccess() {
+async function testNavbarAccess() {  
   console.log("=== 测试导航栏管理模块显示 ===");
   
   // 登录请求数据
@@ -16,15 +14,9 @@ async function testNavbarAccess() {
   try {
     // 发送登录请求
     console.log("1. 发送登录请求...");
-    const response = await axios.post(
-      `${BASE_URL}login/`,
-      loginData,
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        timeout: 5000
-      }
+    const response = await api.post(
+      '/auth/login/',
+      loginData
     );
     
     console.log(`登录成功，状态码: ${response.status}`);
@@ -45,13 +37,7 @@ async function testNavbarAccess() {
     
     // 请求用户信息接口
     console.log("2. 请求用户信息接口...");
-    const profileResponse = await axios.get(`${BASE_URL}profile/`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      timeout: 5000
-    });
+    const profileResponse = await api.get('/auth/profile/');
     
     console.log(`获取用户信息成功，状态码: ${profileResponse.status}`);
     console.log(`用户信息接口返回: ${JSON.stringify(profileResponse.data, null, 2)}`);

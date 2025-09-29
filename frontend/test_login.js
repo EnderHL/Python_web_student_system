@@ -1,8 +1,5 @@
 // 模拟前端登录测试
-import axios from 'axios';
-
-// API基础URL
-const BASE_URL = 'http://127.0.0.1:8000/api/auth/';
+import api from './src/utils/axios.js';
 
 // 登录函数
 async function testFrontendLogin() {
@@ -16,15 +13,9 @@ async function testFrontendLogin() {
   
   try {
     // 发送登录请求
-    const response = await axios.post(
-      `${BASE_URL}login/`,
-      loginData,
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        timeout: 5000
-      }
+    const response = await api.post(
+      '/auth/login/',
+      loginData
     );
     
     console.log(`响应状态码: ${response.status}`);

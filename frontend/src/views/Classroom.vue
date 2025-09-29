@@ -1,6 +1,6 @@
 <template>
   <div class="classroom-container">
-    <main class="main-content">
+    <div class="classroom-main">
         <div class="classroom-header">
           <h2>教室管理</h2>
           <button @click="showAddForm = !showAddForm" class="add-btn">
@@ -207,15 +207,17 @@
             </div>
           </form>
         </el-dialog>
-      </main>
+      </div>
   </div>
 </template>
 
 <script src="../scripts/Classroom.js"></script>
 
   <style scoped>
-  .classroom-container {
+  .classroom-main {
+    padding: 20px;
     width: 100%;
+    box-sizing: border-box;
   }
   </style>
   

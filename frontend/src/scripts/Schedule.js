@@ -14,12 +14,12 @@ export default {
     const loadUserInfo = async () => {
       try {
         if (!user.value) {
-          const response = await api.get('/user/me/')
+          const response = await api.get('/users/me/')
           user.value = response.data
           localStorage.setItem('user', JSON.stringify(response.data))
         }
       } catch (error) {
-        console.error('Failed to load user info:', error)
+        console.error('加载用户信息失败:', error)
       }
     }
 
@@ -48,6 +48,11 @@ export default {
     const courseFilter = ref('')
     const classroomFilter = ref('')
     const teacherFilter = ref('')
+    const weekPatternFilter = ref('')
+  
+  // 课程类型状态
+  const isCurrentCourseOnline = ref(false)
+  const isEditCourseOnline = ref(false)
     
     // 分页相关
     const currentPage = ref(1)
@@ -58,12 +63,13 @@ export default {
     // 添加排课表单
     const showAddForm = ref(false)
     const scheduleForm = ref({
-      day: '',
-      time_slot: '',
       course: '',
+      teaching_assignment: '',
       classroom: '',
-      teacher: '',
-      description: ''
+      day_of_week: '',
+      start_section: '',
+      end_section: '',
+      week_pattern: 'all'
     })
 
     // 课程、教室、教师数据
@@ -77,6 +83,8 @@ export default {
     const showEditDialog = ref(false)
     const editForm = ref({})
 
+
+
     // 退出登录
     const handleLogout = () => {
       localStorage.removeItem('token')
@@ -87,7 +95,7 @@ export default {
     // 获取课程列表
     const fetchCourses = async () => {
       try {
-        const response = await api.get('courses/')
+        const response = await api.get('/courses/')
         courses.value = response.data.results
       } catch (error) {
         console.error('获取课程列表失败:', error)
@@ -97,7 +105,7 @@ export default {
     // 获取教室列表
     const fetchClassrooms = async () => {
       try {
-        const response = await api.get('classrooms/')
+        const response = await api.get('/classrooms/')
         classrooms.value = response.data.results
       } catch (error) {
         console.error('获取教室列表失败:', error)
@@ -127,7 +135,7 @@ export default {
 
         // 添加筛选条件
         if (dayFilter.value) {
-          url += `&day=${dayFilter.value}`
+          url += `&day_of_week=${dayFilter.value}`
         }
 
         if (courseFilter.value) {
@@ -140,6 +148,10 @@ export default {
 
         if (teacherFilter.value) {
           url += `&teacher=${teacherFilter.value}`
+        }
+
+        if (weekPatternFilter.value) {
+          url += `&week_pattern=${weekPatternFilter.value}`
         }
 
         const response = await api.get(url)
@@ -157,16 +169,25 @@ export default {
     const addSchedule = async () => {
       loading.value = true
       try {
-        await api.post('/schedules/', scheduleForm.value)
+        // 准备要提交的数据
+        const submitData = {
+          ...scheduleForm.value,
+          classroom: isCurrentCourseOnline.value ? null : scheduleForm.value.classroom
+        }
+        
+        await api.post('/schedules/', submitData)
         showAddForm.value = false
         fetchSchedules()
         alert('排课添加成功！')
       } catch (error) {
         console.error('添加排课失败:', error)
+        alert('添加排课失败，请重试！')
       } finally {
         loading.value = false
       }
     }
+
+
 
     // 查看排课详情
     const viewScheduleDetails = (schedule) => {
@@ -184,7 +205,13 @@ export default {
     const updateSchedule = async () => {
       loading.value = true
       try {
-        await api.put(`/api/schedules/${editForm.value.id}/`, editForm.value)
+        // 准备要提交的数据
+        const submitData = {
+          ...editForm.value,
+          classroom: isEditCourseOnline.value ? null : editForm.value.classroom
+        }
+        
+        await api.put(`/schedules/${editForm.value.id}/`, submitData)
         showEditDialog.value = false
         fetchSchedules()
         alert('排课更新成功！')
@@ -200,7 +227,7 @@ export default {
       if (confirm('确定要删除这个排课吗？')) {
         loading.value = true
         try {
-          await api.delete(`/api/schedules/${id}/`)
+          await api.delete(`/schedules/${id}/`)
           fetchSchedules()
           alert('排课删除成功！')
         } catch (error) {
@@ -232,6 +259,7 @@ export default {
       courseFilter.value = ''
       classroomFilter.value = ''
       teacherFilter.value = ''
+      weekPatternFilter.value = ''
       currentPage.value = 1
       fetchSchedules()
     }
@@ -316,12 +344,30 @@ export default {
     const onCourseChange = (event) => {
       const courseId = event.target.value
       editTeachingAssignments.value = teachingAssignments.value.filter(ta => ta.course_id === courseId)
+      
+      // 检查课程是否为线上课程
+      const selectedCourse = courses.value.find(course => course.id === courseId)
+      isCurrentCourseOnline.value = selectedCourse && selectedCourse.teaching_method === 'online'
+      
+      // 如果是线上课程，清空教室选择
+      if (isCurrentCourseOnline.value) {
+        scheduleForm.value.classroom = ''
+      }
     }
 
     // 编辑课程变化处理
     const onEditCourseChange = (event) => {
       const courseId = event.target.value
       editTeachingAssignments.value = teachingAssignments.value.filter(ta => ta.course_id === courseId)
+      
+      // 检查课程是否为线上课程
+      const selectedCourse = courses.value.find(course => course.id === courseId)
+      isEditCourseOnline.value = selectedCourse && selectedCourse.teaching_method === 'online'
+      
+      // 如果是线上课程，清空教室选择
+      if (isEditCourseOnline.value) {
+        editForm.value.classroom = ''
+      }
     }
 
     // 起始节次变化处理
@@ -361,6 +407,7 @@ export default {
       courseFilter,
       classroomFilter,
       teacherFilter,
+      weekPatternFilter,
       currentPage,
       totalPages,
       pageSize,
@@ -374,6 +421,8 @@ export default {
       selectedSchedule,
       showEditDialog,
       editForm,
+      isCurrentCourseOnline,
+      isEditCourseOnline,
       loadUserInfo,
       getCourseName,
       getClassName,

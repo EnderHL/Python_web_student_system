@@ -1,44 +1,46 @@
 <template>
-  <!-- 侧边导航栏组件 -->
-  <nav class="sidebar">
-    <ul class="nav-menu">
-      <li class="nav-item">
-        <router-link to="/" class="nav-link" :class="{ active: $route.path === '/' }">
-          首页
-        </router-link>
-      </li>
-      <li class="nav-item" v-if="user?.user_type === 'admin'">
-        <router-link to="/teacher" class="nav-link" :class="{ active: $route.path === '/teacher' }">
-          教师管理
-        </router-link>
-      </li>
-      <li class="nav-item" v-if="user?.user_type === 'admin'">
-        <router-link to="/course" class="nav-link" :class="{ active: $route.path === '/course' }">
-          课程管理
-        </router-link>
-      </li>
-      <li class="nav-item" v-if="user?.user_type === 'admin'">
-        <router-link to="/schedule" class="nav-link" :class="{ active: $route.path === '/schedule' }">
-          排课管理
-        </router-link>
-      </li>
-      <li class="nav-item" v-if="user?.user_type === 'admin'">
-        <router-link to="/classroom" class="nav-link" :class="{ active: $route.path === '/classroom' }">
-          教室管理
-        </router-link>
-      </li>
-      <li class="nav-item" v-if="user?.user_type === 'teacher' || user?.user_type === 'admin'">
-        <router-link to="/student" class="nav-link" :class="{ active: $route.path === '/student' }">
-          学生管理
-        </router-link>
-      </li>
-    </ul>
-  </nav>
+  <!-- 侧边导航栏组件 - Element Plus 风格 -->
+  <el-menu
+    :default-active="$route.path"
+    class="sidebar el-menu-vertical-demo"
+    @open="handleOpen"
+    @close="handleClose"
+    background-color="#ffffff"
+    text-color="#5a6268"
+    active-text-color="#3498db"
+    router
+  >
+    <el-menu-item index="/">
+      <el-icon><House /></el-icon>
+      <span>首页</span>
+    </el-menu-item>
+    <el-menu-item index="/teacher" v-if="user?.user_type === 'admin'">
+      <el-icon><User /></el-icon>
+      <span>教师管理</span>
+    </el-menu-item>
+    <el-menu-item index="/course" v-if="user?.user_type === 'admin'">
+      <el-icon><Document /></el-icon>
+      <span>课程管理</span>
+    </el-menu-item>
+    <el-menu-item index="/schedule" v-if="user?.user_type === 'admin'">
+      <el-icon><Calendar /></el-icon>
+      <span>排课管理</span>
+    </el-menu-item>
+    <el-menu-item index="/classroom" v-if="user?.user_type === 'admin'">
+      <el-icon><OfficeBuilding /></el-icon>
+      <span>教室管理</span>
+    </el-menu-item>
+    <el-menu-item index="/student" v-if="user?.user_type === 'teacher' || user?.user_type === 'admin'">
+      <el-icon><UserFilled /></el-icon>
+      <span>学生管理</span>
+    </el-menu-item>
+  </el-menu>
 </template>
 
 <script>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
+import { House, User, Document, Calendar, OfficeBuilding, UserFilled } from '@element-plus/icons-vue';
 
 export default {
   name: 'Navbar',
@@ -86,8 +88,19 @@ export default {
       }
     });
 
+    // 菜单展开/收起事件处理
+    const handleOpen = (key, keyPath) => {
+      console.log(key, keyPath);
+    }
+
+    const handleClose = (key, keyPath) => {
+      console.log(key, keyPath);
+    }
+
     return {
-      user
+      user,
+      handleOpen,
+      handleClose
     };
   }
 };
@@ -96,77 +109,34 @@ export default {
 <style scoped>
 .sidebar {
   width: 220px;
-  background-color: #ffffff;
   border-right: 1px solid #e9ecef;
-  overflow-y: auto;
-  flex-shrink: 0;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
   height: calc(100vh - 60px); /* 减去头部高度 */
   position: fixed;
   left: 0;
   top: 60px;
   z-index: 100;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
 }
 
-.nav-menu {
-  padding: 16px 0;
-  margin: 0;
-  list-style: none;
+/* 确保element的菜单样式正确应用 */
+.el-menu-vertical-demo:not(.el-menu--collapse) {
+  width: 220px;
+  min-height: 400px;
 }
 
-.nav-item {
-  margin: 4px 0;
-}
-
-.nav-link {
-  display: block;
-  padding: 12px 24px;
-  color: #5a6268;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  border-left: 3px solid transparent;
-  font-size: 14px;
-}
-
-.nav-link:hover {
-  background-color: #f8f9fa;
-  color: #3498db;
-  border-left-color: #3498db;
-}
-
-.nav-link.active {
-  background-color: #3498db;
-  color: white;
-  border-left-color: #2980b9;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-/* 响应式设计 */
+/* 响应式设计 - Element Plus的响应式样式已经处理了大部分情况 */
 @media (max-width: 768px) {
   .sidebar {
     width: 100%;
     height: auto;
     border-right: none;
     border-bottom: 1px solid #e9ecef;
-    max-height: 200px;
     position: relative;
     top: 0;
   }
   
-  .nav-menu {
-    display: flex;
-    flex-wrap: wrap;
-    padding: 8px;
-  }
-  
-  .nav-item {
-    margin: 4px;
-  }
-  
-  .nav-link {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border-left: none;
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 100%;
   }
 }
 </style>

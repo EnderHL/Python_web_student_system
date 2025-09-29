@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程API测试工具</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .intro {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .log-container {
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+            padding: 20px;
+            border-radius: 6px;
+            height: 500px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+        }
+        .instructions h3 {
+            color: #495057;
+            margin-top: 0;
+        }
+        .instructions ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>课程API测试工具</h1>
+        
+        <div class="intro">
+            这个工具用于帮助诊断课程管理页面无法查询到数据的问题。点击下方按钮开始测试，测试结果将显示在下方日志区域。
+        </div>
+        
+        <div class="instructions">
+            <h3>测试说明</h3>
+            <ul>
+                <li>测试将检查后端服务器连接、认证状态、课程API调用等方面</li>
+                <li>请确保后端Django服务器正在运行（通常在 http://127.0.0.1:8000）</li>
+                <li>请先在系统中登录，以确保测试时有正确的认证信息</li>
+                <li>测试完成后，会生成一份简单的问题诊断报告</li>
+            </ul>
+        </div>
+        
+        <button id="startTestBtn">开始测试</button>
+        
+        <div class="log-container" id="logContainer">
+            <span class="highlight">点击上方按钮开始测试...</span>
+        </div>
+        
+        <div class="footer">
+            测试工具版本 1.0.0 | 用于诊断课程管理页面数据获取问题
+        </div>
+    </div>
+
+    <script>
+        // 重写控制台日志，将日志输出到页面
+        const logContainer = document.getElementById('logContainer');
+        const originalConsoleLog = console.log;
+        
+        console.log = function(message) {
+            // 保留原始控制台输出
+            originalConsoleLog.apply(console, arguments);
+            
+            // 添加到页面日志容器
+            if (typeof message === 'string') {
+                // 处理ANSI颜色代码
+                let formattedMessage = message
+                    .replace(/\x1b\[32m/g, '<span style="color: #2ecc71;">')
+                    .replace(/\x1b\[31m/g, '<span style="color: #e74c3c;">')
+                    .replace(/\x1b\[36m/g, '<span style="color: #3498db;">')
+                    .replace(/\x1b\[33m/g, '<span style="color: #f39c12;">')
+                    .replace(/\x1b\[0m/g, '</span>');
+                
+                logContainer.innerHTML += formattedMessage + '<br>';
+            } else {
+                // 对于非字符串类型，使用JSON序列化
+                try {
+                    const jsonMessage = JSON.stringify(message, null, 2);
+                    logContainer.innerHTML += `<pre style="color: #95a5a6;">${jsonMessage}</pre><br>`;
+                } catch (e) {
+                    logContainer.innerHTML += '无法序列化的对象<br>';
+                }
+            }
+            
+            // 自动滚动到底部
+            logContainer.scrollTop = logContainer.scrollHeight;
+        };
+        
+        // 也重写其他控制台方法
+        const originalConsoleError = console.error;
+        console.error = function(message) {
+            originalConsoleError.apply(console, arguments);
+            console.log(`<span style="color: #e74c3c; font-weight: bold;">ERROR:</span> ${message}`);
+        };
+        
+        const originalConsoleWarn = console.warn;
+        console.warn = function(message) {
+            originalConsoleWarn.apply(console, arguments);
+            console.log(`<span style="color: #f39c12; font-weight: bold;">WARNING:</span> ${message}`);
+        };
+        
+        // 开始测试按钮点击事件
+        document.getElementById('startTestBtn').addEventListener('click', async function() {
+            // 清空日志容器
+            logContainer.innerHTML = '';
+            
+            // 禁用按钮防止重复点击
+            this.disabled = true;
+            this.textContent = '测试进行中...';
+            
+            try {
+                console.log('\n=== 课程API测试工具 ===\n');
+                console.log('正在准备测试环境...');
+                
+                // 先检查axios是否可以直接使用
+                if (typeof axios !== 'undefined') {
+                    console.log('发现全局axios实例，直接使用...');
+                    runTestWithAxios(axios);
+                } else {
+                    // 尝试动态加载axios
+                    console.log('尝试动态加载axios库...');
+                    const axiosScript = document.createElement('script');
+                    axiosScript.src = 'https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js';
+                    
+                    axiosScript.onload = function() {
+                        console.log('axios加载成功，准备修改基础URL...');
+                        // 设置axios基础URL
+                        axios.defaults.baseURL = 'http://127.0.0.1:8000/api';
+                        
+                        // 尝试获取本地存储中的token
+                        const token = localStorage.getItem('token');
+                        if (token) {
+                            console.log('检测到本地token，设置认证头...');
+                            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+                        }
+                        
+                        // 运行测试
+                        runTestWithAxios(axios);
+                    };
+                    
+                    axiosScript.onerror = function() {
+                        console.error('axios加载失败，使用内置简化版测试...');
+                        runSimplifiedTest();
+                    };
+                    
+                    document.head.appendChild(axiosScript);
+                }
+            } catch (error) {
+                console.error(`测试过程中发生错误: ${error.message}`);
+                this.disabled = false;
+                this.textContent = '开始测试';
+            }
+        });
+        
+        // 使用axios运行完整测试
+        function runTestWithAxios(axios) {
+            // 配置控制台日志颜色
+            const consoleColors = {
+                success: '\x1b[32m',
+                error: '\x1b[31m',
+                info: '\x1b[36m',
+                warning: '\x1b[33m',
+                reset: '\x1b[0m'
+            };
+            
+            // 格式化日志函数
+            function log(color, message) {
+                console.log(`${color}[${new Date().toLocaleTimeString()}] ${message}${consoleColors.reset}`);
+            }
+            
+            // 测试函数集合
+            const CourseApiTester = {
+                // 测试axios基本配置
+                async testAxiosConfig() {
+                    log(consoleColors.info, '测试axios配置...');
+                    log(consoleColors.info, `基础URL: ${axios.defaults.baseURL}`);
+                    log(consoleColors.info, `是否有认证token: ${axios.defaults.headers.common['Authorization'] ? '是' : '否'}`);
+                    
+                    // 测试网络连接
+                    try {
+                        const response = await fetch(axios.defaults.baseURL || 'http://127.0.0.1:8000', {
+                            method: 'HEAD',
+                            timeout: 5000
+                        });
+                        log(consoleColors.success, `服务器连接成功，状态码: ${response.status}`);
+                    } catch (error) {
+                        log(consoleColors.error, `服务器连接失败: ${error.message}`);
+                        log(consoleColors.warning, '请确认后端服务器是否正常运行在 http://127.0.0.1:8000');
+                    }
+                },
+                
+                // 测试获取课程列表API
+                async testFetchCourses(params = {}) {
+                    log(consoleColors.info, `测试获取课程列表API，参数: ${JSON.stringify(params)}`);
+                    try {
+                        const startTime = Date.now();
+                        const response = await axios.get('/courses/', { params });
+                        const endTime = Date.now();
+                        
+                        log(consoleColors.success, `API调用成功，耗时: ${endTime - startTime}ms`);
+                        log(consoleColors.info, `状态码: ${response.status}`);
+                        log(consoleColors.info, `返回数据类型: ${typeof response.data}`);
+                        
+                        if (Array.isArray(response.data)) {
+                            log(consoleColors.info, `返回课程数量: ${response.data.length}`);
+                            if (response.data.length > 0) {
+                                log(consoleColors.info, '前3条课程数据样本:');
+                                response.data.slice(0, 3).forEach((course, index) => {
+                                    log(consoleColors.info, `  ${index + 1}. ${course.name || '无名称'} (ID: ${course.id})`);
+                                });
+                            } else {
+                                log(consoleColors.warning, '返回的课程列表为空');
+                            }
+                        } else if (response.data && typeof response.data === 'object') {
+                            // 检查是否是分页数据
+                            if (response.data.results && Array.isArray(response.data.results)) {
+                                log(consoleColors.info, `分页数据 - 总条数: ${response.data.count || 0}`);
+                                log(consoleColors.info, `分页数据 - 当前页课程数量: ${response.data.results.length}`);
+                                if (response.data.results.length > 0) {
+                                    log(consoleColors.info, '前3条课程数据样本:');
+                                    response.data.results.slice(0, 3).forEach((course, index) => {
+                                        log(consoleColors.info, `  ${index + 1}. ${course.name || '无名称'} (ID: ${course.id})`);
+                                    });
+                                } else {
+                                    log(consoleColors.warning, '返回的课程列表为空');
+                                }
+                            } else {
+                                log(consoleColors.warning, '返回的数据不是预期的数组或分页对象格式');
+                                log(consoleColors.warning, `数据结构: ${JSON.stringify(Object.keys(response.data || {}))}`);
+                            }
+                        } else {
+                            log(consoleColors.error, '返回的数据格式不正确');
+                        }
+                        
+                        return response.data;
+                    } catch (error) {
+                        log(consoleColors.error, `API调用失败: ${error.message}`);
+                        if (error.response) {
+                            log(consoleColors.error, `  状态码: ${error.response.status}`);
+                            log(consoleColors.error, `  错误数据: ${JSON.stringify(error.response.data)}`);
+                            
+                            // 常见错误处理
+                            if (error.response.status === 401) {
+                                log(consoleColors.warning, '  认证失败，请确认是否已登录');
+                            } else if (error.response.status === 403) {
+                                log(consoleColors.warning, '  权限不足，您可能没有访问课程数据的权限');
+                            } else if (error.response.status === 404) {
+                                log(consoleColors.warning, '  API端点不存在，请检查URL是否正确');
+                            }
+                        } else if (error.request) {
+                            log(consoleColors.error, '  没有收到响应，请确认后端服务器是否运行正常');
+                        }
+                        return null;
+                    }
+                },
+                
+                // 测试获取单个课程详情
+                async testFetchCourseDetail(courseId) {
+                    log(consoleColors.info, `测试获取单个课程详情，ID: ${courseId}`);
+                    try {
+                        const response = await axios.get(`/courses/${courseId}/`);
+                        log(consoleColors.success, `获取课程详情成功，ID: ${courseId}`);
+                        log(consoleColors.info, `课程名称: ${response.data.name || '无名称'}`);
+                        log(consoleColors.info, `课程代码: ${response.data.code || '无代码'}`);
+                        return response.data;
+                    } catch (error) {
+                        log(consoleColors.error, `获取课程详情失败: ${error.message}`);
+                        if (error.response) {
+                            log(consoleColors.error, `  状态码: ${error.response.status}`);
+                        }
+                        return null;
+                    }
+                },
+                
+                // 检查认证状态
+                async checkAuthStatus() {
+                    log(consoleColors.info, '检查认证状态...');
+                    // 检查localStorage中的token
+                    const token = localStorage.getItem('token');
+                    log(consoleColors.info, `localStorage中的token: ${token ? '存在' : '不存在'}`);
+                    
+                    // 检查用户信息
+                    try {
+                        const response = await axios.get('/user/');
+                        log(consoleColors.success, '用户信息获取成功');
+                        log(consoleColors.info, `用户名: ${response.data.username}`);
+                        log(consoleColors.info, `用户角色: ${response.data.role || '未知'}`);
+                        return response.data;
+                    } catch (error) {
+                        log(consoleColors.error, `用户信息获取失败: ${error.message}`);
+                        return null;
+                    }
+                },
+                
+                // 完整测试流程
+                async runFullTest() {
+                    log(consoleColors.info, '=== 开始课程API完整测试 ===');
+                    
+                    // 1. 测试axios配置
+                    await this.testAxiosConfig();
+                    
+                    // 2. 检查认证状态
+                    await this.checkAuthStatus();
+                    
+                    // 3. 测试获取所有课程（无参数）
+                    const allCourses = await this.testFetchCourses();
+                    
+                    // 4. 测试带参数的课程查询
+                    if (allCourses) {
+                        await this.testFetchCourses({ page: 1, page_size: 10 });
+                        await this.testFetchCourses({ course_type: '必修' });
+                    }
+                    
+                    // 5. 如果有课程数据，测试获取单个课程详情
+                    if (allCourses && Array.isArray(allCourses) && allCourses.length > 0) {
+                        await this.testFetchCourseDetail(allCourses[0].id);
+                    } else if (allCourses && allCourses.results && allCourses.results.length > 0) {
+                        await this.testFetchCourseDetail(allCourses.results[0].id);
+                    }
+                    
+                    log(consoleColors.info, '=== 课程API测试完成 ===');
+                    
+                    // 生成问题诊断报告
+                    this.generateDiagnosticReport();
+                    
+                    // 测试完成后启用按钮
+                    document.getElementById('startTestBtn').disabled = false;
+                    document.getElementById('startTestBtn').textContent = '开始测试';
+                },
+                
+                // 生成问题诊断报告
+                generateDiagnosticReport() {
+                    log(consoleColors.info, '\n=== 问题诊断报告 ===');
+                    log(consoleColors.info, '请根据以上测试结果检查以下可能的问题:');
+                    log(consoleColors.info, '1. 后端服务器是否正常运行在 http://127.0.0.1:8000');
+                    log(consoleColors.info, '2. 是否已成功登录并持有有效的认证token');
+                    log(consoleColors.info, '3. 用户是否有访问课程数据的权限');
+                    log(consoleColors.info, '4. 课程数据表中是否存在数据');
+                    log(consoleColors.info, '5. API响应格式是否符合前端预期（数组或分页对象）');
+                    log(consoleColors.info, '6. 网络连接是否正常，是否有跨域问题');
+                    log(consoleColors.info, '==================\n');
+                }
+            };
+            
+            // 运行测试
+            CourseApiTester.runFullTest();
+        }
+        
+        // 简化版测试（当axios加载失败时使用）
+        function runSimplifiedTest() {
+            console.log('\n=== 运行简化版测试 ===\n');
+            
+            // 测试1: 检查后端服务器连接
+            console.log('[测试1] 检查后端服务器连接...');
+            fetch('http://127.0.0.1:8000', {
+                method: 'HEAD',
+                timeout: 5000
+            })
+            .then(response => {
+                console.log(`✅ 服务器连接成功，状态码: ${response.status}`);
+            })
+            .catch(error => {
+                console.error(`❌ 服务器连接失败: ${error.message}`);
+                console.log('请确认后端服务器是否正常运行在 http://127.0.0.1:8000');
+            })
+            .finally(() => {
+                // 测试2: 检查认证token
+                console.log('\n[测试2] 检查认证状态...');
+                const token = localStorage.getItem('token');
+                if (token) {
+                    console.log('✅ 发现localStorage中存在token');
+                } else {
+                    console.log('❌ localStorage中没有找到token，请先登录系统');
+                }
+                
+                // 测试3: 尝试直接获取课程数据
+                console.log('\n[测试3] 尝试直接获取课程数据...');
+                const courseUrl = 'http://127.0.0.1:8000/api/courses/';
+                const fetchOptions = {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    timeout: 10000
+                };
+                
+                // 如果有token，添加认证头
+                if (token) {
+                    fetchOptions.headers['Authorization'] = `Bearer ${token}`;
+                }
+                
+                fetch(courseUrl, fetchOptions)
+                .then(response => {
+                    console.log(`✅ API请求完成，状态码: ${response.status}`);
+                    return response.json().catch(() => ({}));
+                })
+                .then(data => {
+                    console.log(`数据类型: ${typeof data}`);
+                    if (Array.isArray(data)) {
+                        console.log(`返回课程数量: ${data.length}`);
+                    } else if (data && data.results && Array.isArray(data.results)) {
+                        console.log(`分页数据 - 总条数: ${data.count || 0}`);
+                        console.log(`分页数据 - 当前页课程数量: ${data.results.length}`);
+                    }
+                    console.log('\n=== 简化测试完成 ===');
+                    console.log('建议: 使用完整测试工具获取更详细的诊断信息');
+                })
+                .catch(error => {
+                    console.error(`❌ API请求失败: ${error.message}`);
+                })
+                .finally(() => {
+                    // 测试完成后启用按钮
+                    document.getElementById('startTestBtn').disabled = false;
+                    document.getElementById('startTestBtn').textContent = '开始测试';
+                });
+            });
+        }
+    </script>
+</body>
+</html>

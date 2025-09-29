@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程API测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .auth-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #e9f7fe;
+            border: 1px solid #bae6fd;
+            border-radius: 5px;
+        }
+        input {
+            padding: 8px;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>课程API测试页面</h1>
+        
+        <div class="auth-section">
+            <h2>认证设置</h2>
+            <button id="setTestToken">设置临时测试Token (可能无效)</button>
+            <button id="getRealToken">获取真实JWT Token</button>
+            <button id="clearToken">清除Token</button>
+            <div id="authStatus" style="margin-top: 10px; color: blue;">未设置Token</div>
+            <div style="margin-top: 10px;">
+                <input type="text" id="customToken" placeholder="或输入自定义Token" style="width: 300px;">
+                <button id="setCustomToken">使用自定义Token</button>
+            </div>
+        </div>
+        
+        <h2>API测试</h2>
+        <button id="testCourses">测试: 获取所有课程</button>
+        <button id="testTeachers">测试: 获取所有教师</button>
+        <button id="testClassrooms">测试: 获取所有教室</button>
+        <button id="testProfile">测试: 获取用户信息</button>
+        
+        <div class="result" id="result">
+            测试结果将显示在这里...
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000/api';
+        const resultElement = document.getElementById('result');
+        const authStatusElement = document.getElementById('authStatus');
+
+        // 设置临时测试Token
+        document.getElementById('setTestToken').addEventListener('click', () => {
+            localStorage.setItem('token', 'temporary_test_token');
+            authStatusElement.textContent = '已设置临时测试Token';
+            authStatusElement.style.color = 'green';
+            showResult('临时测试Token已设置到localStorage');
+        });
+
+        // 清除Token
+        document.getElementById('clearToken').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            authStatusElement.textContent = '已清除Token';
+            authStatusElement.style.color = 'red';
+            showResult('Token已从localStorage清除');
+        });
+        
+        // 获取真实JWT Token
+        document.getElementById('getRealToken').addEventListener('click', async () => {
+            try {
+                // 先尝试创建测试用户
+                const testUsername = 'test_user_' + Date.now().toString().slice(-4);
+                const testPassword = 'Test@1234';
+                
+                showResult(`正在创建测试用户并获取JWT Token...\n用户名: ${testUsername}\n密码: ${testPassword}`);
+                
+                // 尝试注册用户
+                const registerResponse = await fetch(`${API_BASE_URL}/auth/register/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: testUsername,
+                        password: testPassword,
+                        password2: testPassword,
+                        email: `${testUsername}@example.com`
+                    })
+                });
+                
+                if (!registerResponse.ok && registerResponse.status !== 400) {
+                    showResult(`注册用户失败: ${await registerResponse.text()}`);
+                    return;
+                }
+                
+                // 尝试登录获取Token
+                const loginResponse = await fetch(`${API_BASE_URL}/auth/login/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: testUsername,
+                        password: testPassword
+                    })
+                });
+                
+                if (loginResponse.ok) {
+                    const data = await loginResponse.json();
+                    const token = data.access;
+                    localStorage.setItem('token', token);
+                    authStatusElement.textContent = '已获取真实JWT Token';
+                    authStatusElement.style.color = 'green';
+                    showResult(`成功获取JWT Token!\n\n用户名: ${testUsername}\n密码: ${testPassword}\n\nToken: ${token}\n\n请点击下方API测试按钮进行测试。`);
+                } else {
+                    const errorText = await loginResponse.text();
+                    showResult(`登录失败: ${errorText}\n\n请尝试手动设置有效的Token。`);
+                }
+            } catch (error) {
+                showResult(`获取Token时发生错误: ${error.message}\n\n请检查API端点是否正确，或者尝试手动设置Token。`);
+            }
+        });
+        
+        // 使用自定义Token
+        document.getElementById('setCustomToken').addEventListener('click', () => {
+            const customToken = document.getElementById('customToken').value.trim();
+            if (customToken) {
+                localStorage.setItem('token', customToken);
+                authStatusElement.textContent = '已设置自定义Token';
+                authStatusElement.style.color = 'green';
+                showResult(`已设置自定义Token: ${customToken}`);
+            } else {
+                showResult('请输入有效的Token');
+            }
+        });
+        
+        // 测试获取所有课程
+        document.getElementById('testCourses').addEventListener('click', () => {
+            testApi('/courses/', '获取所有课程');
+        });
+
+        // 测试获取所有教师
+        document.getElementById('testTeachers').addEventListener('click', () => {
+            testApi('/teachers/', '获取所有教师');
+        });
+
+        // 测试获取所有教室
+        document.getElementById('testClassrooms').addEventListener('click', () => {
+            testApi('/classrooms/', '获取所有教室');
+        });
+
+        // 测试获取用户信息
+        document.getElementById('testProfile').addEventListener('click', () => {
+            testApi('/auth/profile/', '获取用户信息');
+        });
+
+        // 通用API测试函数
+        async function testApi(endpoint, description) {
+            showResult(`正在测试: ${description}\nURL: ${API_BASE_URL}${endpoint}\n请稍候...`);
+            
+            try {
+                const token = localStorage.getItem('token');
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+                
+                const startTime = Date.now();
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'GET',
+                    headers: headers
+                });
+                const endTime = Date.now();
+                
+                const responseTime = endTime - startTime;
+                const statusText = `状态码: ${response.status} (${response.statusText})`;
+                const timeText = `响应时间: ${responseTime}ms`;
+                const tokenText = token ? `使用Token: ${token}` : '未使用Token';
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showResult(`${description} 测试结果:\n${statusText}\n${timeText}\n${tokenText}\n\n数据:`, data);
+                } else {
+                    const errorText = await response.text();
+                    showResult(`${description} 测试失败:\n${statusText}\n${timeText}\n${tokenText}\n\n错误信息: ${errorText}`);
+                }
+            } catch (error) {
+                showResult(`${description} 测试异常:\n${error.message}`);
+            }
+        }
+
+        // 显示结果函数
+        function showResult(message, data = null) {
+            if (data) {
+                try {
+                    const formattedData = JSON.stringify(data, null, 2);
+                    resultElement.textContent = `${message}\n${formattedData}`;
+                } catch (e) {
+                    resultElement.textContent = `${message}\n数据格式化失败: ${e.message}`;
+                }
+            } else {
+                resultElement.textContent = message;
+            }
+        }
+
+        // 页面加载时检查Token状态
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                authStatusElement.textContent = '已存在Token';
+                authStatusElement.style.color = 'green';
+            }
+        });
+    </script>
+</body>
+</html>

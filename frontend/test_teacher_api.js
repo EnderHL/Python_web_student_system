@@ -1,7 +1,5 @@
-import axios from 'axios';
-
-// API基础URL
-const BASE_URL = 'http://127.0.0.1:8000/api';
+// 导入项目的axios实例
+import api from './src/utils/axios.js'
 
 // 测试函数
 async function testTeacherApi() {
@@ -16,15 +14,9 @@ async function testTeacherApi() {
   try {
     // 发送登录请求获取token
     console.log("1. 登录获取token...");
-    const loginResponse = await axios.post(
-      `${BASE_URL}/auth/login/`,
-      loginData,
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        timeout: 5000
-      }
+    const loginResponse = await api.post(
+      '/auth/login/',
+      loginData
     );
     
     console.log(`登录成功，状态码: ${loginResponse.status}`);
@@ -40,13 +32,7 @@ async function testTeacherApi() {
     
     // 请求教师列表接口
     console.log("2. 请求教师列表接口...");
-    const teachersResponse = await axios.get(`${BASE_URL}/teachers/`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      timeout: 5000
-    });
+    const teachersResponse = await api.get('/teachers/');
     
     console.log(`获取教师列表成功，状态码: ${teachersResponse.status}`);
     
